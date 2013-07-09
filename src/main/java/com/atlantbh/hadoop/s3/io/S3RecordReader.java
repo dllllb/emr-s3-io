@@ -50,7 +50,10 @@ public abstract class S3RecordReader<KEY, VALUE> extends RecordReader<KEY, VALUE
 		
 		maxKeys = context.getConfiguration().getInt(S3InputFormat.S3_MAX_KEYS, 100);
 
-		reader = new S3BucketReader(bucketName, keyPrefix, marker, maxKeys);
+        String awsAccessKeyId = context.getConfiguration().get("fs.s3n.awsSecretAccessKey");
+        String awsSecretKey = context.getConfiguration().get("fs.s3n.awsAccessKeyId");
+
+		reader = new S3BucketReader(awsAccessKeyId, awsSecretKey, bucketName, keyPrefix, marker, maxKeys);
 	}
 
 	@Override

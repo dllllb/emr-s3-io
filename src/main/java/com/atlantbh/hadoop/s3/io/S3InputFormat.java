@@ -87,7 +87,10 @@ public abstract class S3InputFormat<K, V> extends InputFormat<K, V> {
 			useMappers = true;
 		}
 
-		s3Reader = new S3BucketReader(bucketName, keyPrefix, null, maxKeys);
+        String awsAccessKeyId = conf.get("fs.s3n.awsSecretAccessKey");
+        String awsSecretKey = conf.get("fs.s3n.awsAccessKeyId");
+
+		s3Reader = new S3BucketReader(awsAccessKeyId, awsSecretKey, bucketName, keyPrefix, null, maxKeys);
 
 		List<InputSplit> splits = new ArrayList<InputSplit>();
 

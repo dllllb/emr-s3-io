@@ -2,6 +2,7 @@ package com.atlantbh.hadoop.s3.io;
 
 import java.io.IOException;
 
+import com.amazonaws.auth.BasicAWSCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +43,9 @@ public class S3BucketReader {
 	 * @param maxKeys maximal number of keys to retrieve from S3 in single call
 	 * @throws IOException
 	 */
-	public S3BucketReader(String bucketName, String keyPrefix, String marker, int maxKeys) throws IOException {
+	public S3BucketReader(String awsAccessKeyId, String awsSecretKey, String bucketName, String keyPrefix, String marker, int maxKeys) throws IOException {
 		listObjectsRequest = new ListObjectsRequest(bucketName, keyPrefix, marker, "", maxKeys);
-		s3Client = new AmazonS3Client(new PropertiesCredentials(
-				S3RecordReader.class.getResourceAsStream("/AwsCredentials.properties")));
+		s3Client = new AmazonS3Client(new BasicAWSCredentials(awsAccessKeyId, awsSecretKey));
 	}
 
 	/**
