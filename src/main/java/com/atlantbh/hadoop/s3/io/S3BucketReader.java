@@ -47,6 +47,11 @@ public class S3BucketReader {
 		listObjectsRequest = new ListObjectsRequest(bucketName, keyPrefix, marker, "", maxKeys);
 		s3Client = new AmazonS3Client(new BasicAWSCredentials(awsAccessKeyId, awsSecretKey));
 	}
+	
+	public S3BucketReader(String bucketName, String keyPrefix, String marker, int maxKeys, ConfigCredentials credentials) throws IOException {
+		listObjectsRequest = new ListObjectsRequest(bucketName, keyPrefix, marker, "", maxKeys);
+		s3Client = new AmazonS3Client(credentials);
+	}
 
 	/**
 	 * Reads next key from S3
