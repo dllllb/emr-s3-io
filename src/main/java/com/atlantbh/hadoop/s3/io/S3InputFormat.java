@@ -69,7 +69,10 @@ public abstract class S3InputFormat<K, V> extends InputFormat<K, V> {
 				throw new InvalidJobConfException("Bad mapred.input.dir property");			}
 		}
 
-		s3Reader = new S3BucketReader(bucketName, keyPrefix, null, maxKeys, new ConfigCredentials(conf));
+        String awsAccessKeyId = context.getConfiguration().get("fs.s3n.awsAccessKeyId");
+        String awsSecretKey = context.getConfiguration().get("fs.s3n.awsSecretAccessKey");
+
+        s3Reader = new S3BucketReader(awsAccessKeyId, awsSecretKey, bucketName, keyPrefix, null, maxKeys);
 
 		List<InputSplit> splits = new ArrayList<InputSplit>();
 
