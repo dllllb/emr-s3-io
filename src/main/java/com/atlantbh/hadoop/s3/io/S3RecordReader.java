@@ -38,7 +38,6 @@ public abstract class S3RecordReader<KEY, VALUE> extends RecordReader<KEY, VALUE
 	KEY outKey = null;
 	VALUE outValue = null;
 
-	@Override
 	public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
 
 		S3InputSplit inputSplit = (S3InputSplit) split;
@@ -48,12 +47,9 @@ public abstract class S3RecordReader<KEY, VALUE> extends RecordReader<KEY, VALUE
 		marker = inputSplit.getMarker();
 		lastKey = inputSplit.lastKey;
 		
-		maxKeys = context.getConfiguration().getInt(S3InputFormat.S3_MAX_KEYS, 100);
-
-        String awsAccessKeyId = context.getConfiguration().get("fs.s3n.awsAccessKeyId");
-        String awsSecretKey = context.getConfiguration().get("fs.s3n.awsSecretAccessKey");
-
-		reader = new S3BucketReader(awsAccessKeyId, awsSecretKey, bucketName, keyPrefix, marker, maxKeys);
+		maxKeys = context.getConfiguration().getInt(S3InputFormat.S3_MAX_KEYS, 1000);
+		
+		reader = new S3BucketReader(bucketName, keyPrefix, marker, maxKeys, new ConfigCredentials(context.getConfiguration()));
 	}
 
 	@Override
