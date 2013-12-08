@@ -62,13 +62,17 @@ public abstract class S3InputFormat<K, V> extends InputFormat<K, V> {
 		int numOfKeysPerMapper = conf.getInt(S3_NUM_OF_KEYS_PER_MAPPER, 1000);
 		if (bucketName == null || "".equals(bucketName)) {
 			String inputPath =  conf.get("mapred.input.dir");
-			if (inputPath == null)
-			try {
-				setInputPath(conf, inputPath);
-                bucketName = conf.get(S3_BUCKET_NAME);
-                keyPrefix = conf.get(S3_KEY_PREFIX);
-			} catch (URISyntaxException e) {
-				throw new InvalidJobConfException("Bad mapred.input.dir property");			}
+			if (inputPath != null) {
+                try {
+                    URI uri = new URI(inputPath);
+                    bucketName = uri.getHost();
+                    keyPrefix = uri.getPath().substring(1);
+                } catch (URISyntaxException e) {
+                    throw new InvalidJobConfException("can't parse mapred.input.dir property");
+                }
+            } else {
+                throw new InvalidJobConfException("both bucket name and mapred.input.dir are not set");
+            }
 		}
 
         String awsAccessKeyId = context.getConfiguration().get("fs.s3n.awsAccessKeyId");
