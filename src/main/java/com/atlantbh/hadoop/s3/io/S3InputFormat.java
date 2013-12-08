@@ -65,6 +65,8 @@ public abstract class S3InputFormat<K, V> extends InputFormat<K, V> {
 			if (inputPath == null)
 			try {
 				setInputPath(conf, inputPath);
+                bucketName = conf.get(S3_BUCKET_NAME);
+                keyPrefix = conf.get(S3_KEY_PREFIX);
 			} catch (URISyntaxException e) {
 				throw new InvalidJobConfException("Bad mapred.input.dir property");			}
 		}
